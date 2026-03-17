@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mendel's Pharmacy Smart Health Checker</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+
+<img src="logo.png" class="logo">
+
+<h1>Mendel's Smart Health Checker</h1>
+
+<p class="subtitle">Comforting and Defending You</p>
+
+</header>
+
+<div class="card">
+
+<h2>Patient Information</h2>
+
+<div class="input-grid">
+
+<input class="form-input" type="text" id="name" placeholder="Patient Name">
+<input class="form-input" type="text" id="age" placeholder="Age">
+
+<input class="form-input" type="text" id="weight" placeholder="Weight (kg)">
+<input class="form-input" type="text" id="height" placeholder="Height (cm)">
+
+<input class="form-input" type="text" id="systolic" placeholder="Systolic BP">
+<input class="form-input" type="text" id="diastolic" placeholder="Diastolic BP">
+
+<input class="form-input" type="text" id="pulse" placeholder="Pulse Rate (bpm)">
+<input class="form-input" type="text" id="sugar" placeholder="Blood Sugar (mg/dL)">
+
+<!-- NEW TESTS -->
+<input class="form-input" type="text" id="pcv" placeholder="PCV (%)">
+<input class="form-input" type="text" id="hb" placeholder="Hemoglobin (g/dL)">
+<input class="form-input" type="text" id="hba1c" placeholder="HbA1c (%)">
+
+</div>
+
+<button onclick="analyzeHealth()">Generate Health Report</button>
+<button onclick="downloadPDF()">Download Report as PDF</button>
+
+</div>
+
+<div class="result-card" id="result">
+
+<h2>Patient Health Report</h2>
+
+<p>Enter patient details to generate report.</p>
+
+</div>
+
+<footer>
+
+<p>Mendel's Pharmacy Digital Health System</p>
+
+</footer>
+
+</div>
+
+<!-- PDF LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
