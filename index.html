@@ -33,6 +33,9 @@
 <input class="form-input" type="text" id="name" placeholder="Patient Name">
 <input class="form-input" type="text" id="age" placeholder="Age">
 
+<input class="form-input" type="text" id="sex" placeholder="Sex (M/F)">
+
+
 <input class="form-input" type="text" id="weight" placeholder="Weight (kg)">
 <input class="form-input" type="text" id="height" placeholder="Height (cm)">
 
@@ -42,7 +45,6 @@
 <input class="form-input" type="text" id="pulse" placeholder="Pulse Rate (bpm)">
 <input class="form-input" type="text" id="sugar" placeholder="Blood Sugar (mg/dL)">
 
-<!-- NEW TESTS -->
 <input class="form-input" type="text" id="pcv" placeholder="PCV (%)">
 <input class="form-input" type="text" id="hb" placeholder="Hemoglobin (g/dL)">
 <input class="form-input" type="text" id="hba1c" placeholder="HbA1c (%)">
@@ -55,10 +57,16 @@
 </div>
 
 <div class="result-card" id="result">
+<div class="report-header">
+  <div class="report-title">Health Report</div>
+  <div class="report-date" id="reportDate"></div>
+</div>
 
-<h2>Patient Health Report</h2>
 
 <p>Enter patient details to generate report.</p>
+
+
+
 
 </div>
 
