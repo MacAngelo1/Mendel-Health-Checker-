@@ -7,6 +7,16 @@ function analyzeHealth(){
 
 let name=document.getElementById("name").value || "INP";
 let age=document.getElementById("age").value || "INP";
+let rawSex = document.getElementById("sex").value.trim().toLowerCase();
+let sex = "INP";
+
+if(rawSex === "male" || rawSex === "m"){
+    sex = "Male";
+}
+else if(rawSex === "female" || rawSex === "f"){
+    sex = "Female";
+}
+    
 
 let weight=getValue("weight");
 let height=getValue("height") ? getValue("height")/100 : null;
@@ -21,210 +31,285 @@ let pcv=getValue("pcv");
 let hb=getValue("hb");
 let hba1c=getValue("hba1c");
 
+/* DATE */
+const today = new Date();
+const formattedDate = today.toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
+
 /* ================= BMI ================= */
-let bmi="INP", bmiAdvice="Info not provided", bmiClass="warning";
+let bmiHTML = `<div class="report-section"><b>BMI:</b> INP</div>`;
 
 if(weight && height){
-bmi=(weight/(height*height)).toFixed(1);
+let bmi=(weight/(height*height)).toFixed(1);
+let status="", advice="", cls="";
 
 if(bmi<18.5){
-bmiAdvice="Underweight: Increase calorie intake and assess for malnutrition.";
-bmiClass="warning";
+status="Underweight";
+advice="Increase calorie intake and assess for malnutrition.";
+cls="warning";
 }
 else if(bmi<25){
-bmiAdvice="Normal weight: Maintain balanced diet and regular exercise.";
-bmiClass="good";
+status="Normal";
+advice="Maintain balanced diet and regular exercise.";
+cls="good";
 }
 else if(bmi<30){
-bmiAdvice="Overweight: Lifestyle modification and weight reduction advised.";
-bmiClass="warning";
+status="Overweight";
+advice="Lifestyle modification required to prevent progression.";
+cls="warning";
 }
 else{
-bmiAdvice="Obesity: Increased cardiovascular risk. Recommend medical evaluation.";
-bmiClass="danger";
-}
+status="Obese";
+advice="Structured weight loss and medical evaluation recommended.";
+cls="danger";
 }
 
-/* ================= BLOOD PRESSURE ================= */
-let bpDisplay="INP", bpStatus="INP", bpAdvice="Info not provided", bpClass="warning";
+bmiHTML = `
+<div class="report-section">
+<b>BMI:</b> <span class="${cls}">${bmi} (${status})</span><br>${advice}
+</div>`;
+}
+
+/* ================= BP ================= */
+let bpHTML = `<div class="report-section"><b>Blood Pressure:</b> INP</div>`;
 
 if(sys && dia){
-bpDisplay=sys + "/" + dia;
+let status="", advice="", cls="";
 
 if(sys<120 && dia<80){
-bpStatus="Normal";
-bpAdvice="Blood pressure within normal limits.";
-bpClass="good";
+status="Optimal";
+advice="Blood pressure within normal limits, Maintain healthy lifestyle.";
+cls="good";
 }
-else if(sys<140){
-bpStatus="Pre-Hypertension";
-bpAdvice="Elevated BP. Recommend lifestyle changes and monitoring.";
-bpClass="warning";
+else if(sys<130 && dia<85){
+status="Normal";
+advice="Blood pressure within high normal limits, Maintain healthy lifestyle.";
+cls="good";
 }
+else if(sys<140 || dia<90){
+status="Pre-Hypertension";
+advice="Elevated BP. lifestyle changes recommended, reduce salt intake, rest adequately, maintain healthy weight by modifying diet and engaging in regular physical activity, monitor blood pressure regularly.";
+cls="warning";}
+
+else if(sys<150 && dia<100){
+status="Hypertension";
+advice="Requires medical management and strict lifestyle control.";
+cls="danger";
+cls="warning";}
+
 else{
-bpStatus="Hypertension";
-bpAdvice="High BP. Requires medical evaluation and possible treatment.";
-bpClass="danger";
-}
+status="Hypertension";
+advice="Requires medical management and strict lifestyle control.";
+cls="danger";
 }
 
-/* ================= PULSE ================= */
-let pulseDisplay="INP", pulseStatus="INP", pulseAdvice="Info not provided", pulseClass="warning";
+bpHTML = `
+<div class="report-section">
+<b>Blood Pressure:</b> <span class="${cls}">${sys}/${dia} (${status})</span><br>${advice}
+</div>`;
+}
+
+/* ================= PULSE  ================= */
+let pulseHTML = `<div class="report-section"><b>Pulse:</b> INP</div>`;
 
 if(pulse){
-pulseDisplay=pulse;
+let status="", advice="", cls="";
 
 if(pulse<60){
-pulseStatus="Bradycardia";
-pulseAdvice="Low pulse rate. Evaluate if symptomatic.";
-pulseClass="warning";
+status="Bradycardia";
+advice="Evaluate if symptomatic.";
+cls="warning";
 }
 else if(pulse<=100){
-pulseStatus="Normal";
-pulseAdvice="Pulse rate within normal range.";
-pulseClass="good";
+status="Normal";
+advice="Pulse rate within normal range.";
+cls="good";
 }
 else{
-pulseStatus="Tachycardia";
-pulseAdvice="Elevated pulse. Assess for stress, infection or cardiac issues.";
-pulseClass="danger";
-}
+status="Tachycardia";
+advice="Assess for stress, infection or cardiac causes.";
+cls="danger";
 }
 
-/* ================= BLOOD SUGAR ================= */
-let sugarDisplay="INP", sugarStatus="INP", sugarAdvice="Info not provided", sugarClass="warning";
+pulseHTML = `
+<div class="report-section">
+<b>Pulse:</b> <span class="${cls}">${pulse} (${status})</span><br>${advice}
+</div>`;
+}
+
+/* ================= SUGAR ================= */
+let sugarHTML = `<div class="report-section"><b>Blood Sugar:</b> INP</div>`;
 
 if(sugar){
-sugarDisplay=sugar;
+let status="", advice="", cls="";
 
 if(sugar<100){
-sugarStatus="Normal";
-sugarAdvice="Normal fasting glucose level.";
-sugarClass="good";
+status="Normal";
+advice="Normal fasting glucose level.";
+cls="good";
 }
 else if(sugar<126){
-sugarStatus="Prediabetes";
-sugarAdvice="Impaired glucose control. Recommend lifestyle modification.";
-sugarClass="warning";
+status="Prediabetes";
+advice="Impaired glucose control. lifestyle modification Recommended.";
+cls="warning";
 }
 else{
-sugarStatus="Diabetes Range";
-sugarAdvice="High glucose level. Requires further diagnostic evaluation.";
-sugarClass="danger";
+status="Diabetes Range";
+advice="High glucose level, Requires further diagnostic evaluation..";
+cls="danger";
 }
+
+sugarHTML = `
+<div class="report-section">
+<b>Blood Sugar:</b> <span class="${cls}">${sugar} (${status})</span><br>${advice}
+</div>`;
 }
 
 /* ================= PCV ================= */
-let pcvDisplay="INP", pcvStatus="INP", pcvAdvice="Info not provided", pcvClass="warning";
+let pcvHTML = `<div class="report-section"><b>PCV:</b> INP</div>`;
 
 if(pcv){
-pcvDisplay=pcv;
+let status="", advice="", cls="";
 
-if(pcv<30){
-pcvStatus="Low";
-pcvAdvice="Low PCV suggests anemia. Investigate underlying cause.";
-pcvClass="danger";
+if(pcv<37){
+status="Low";
+advice="Low PCV suggests anemia. Investigate underlying cause Increase intake of iron-rich foods or supplements.";
+cls="danger";
 }
-else if(pcv<=50){
-pcvStatus="Normal";
-pcvAdvice="Packed cell volume within normal range.";
-pcvClass="good";
+
+else if(pcv<40 && sex==="Male"){
+status="Low";
+advice="Low PCV suggests anemia. Investigate underlying cause Increase intake of iron-rich foods or supplements.";
+cls="danger";
 }
+
+else if(pcv>=37 && pcv<=47 && sex==="Female"){
+status="Normal";
+advice="Within normal range.";
+cls="good";
+}
+
+
+else if(pcv>=40 && pcv<=54 && sex==="Male"){
+status="Normal";
+advice="Within normal range.";
+cls="good";
+}
+
 else{
-pcvStatus="High";
-pcvAdvice="Elevated PCV. Assess for dehydration or polycythemia.";
-pcvClass="warning";
-}
+status="High";
+advice="Possible dehydration or polycythaemia. Assess further.";
+cls="warning";
 }
 
-/* ================= HEMOGLOBIN ================= */
-let hbDisplay="INP", hbStatus="INP", hbAdvice="Info not provided", hbClass="warning";
+pcvHTML = `
+<div class="report-section">
+<b>PCV:</b> <span class="${cls}">${pcv} (${status})</span><br>${advice}
+</div>`;
+}
+
+/* ================= HB ================= */
+let hbHTML = `<div class="report-section"><b>Hemoglobin:</b> INP</div>`;
 
 if(hb){
-hbDisplay=hb;
+let status="", advice="", cls="";
 
 if(hb<12){
-hbStatus="Low";
-hbAdvice="Low hemoglobin indicates anemia. Further evaluation recommended.";
-hbClass="danger";
+status="Low";
+advice="Low hemoglobin indicates anemia, boost blood levels. Further evaluation recommended.";
+cls="danger";
 }
-else if(hb<=17){
-hbStatus="Normal";
-hbAdvice="Hemoglobin level within normal range.";
-hbClass="good";
+
+else if(hb<14 && sex==="Male"){
+status="Low";
+advice="Low hemoglobin indicates anemia, boost blood levels. Further evaluation recommended.";
+cls="danger";
 }
+
+else if(hb<=16 && sex==="Female"){
+status="Normal";
+advice="Hemoglobin level within normal range.";
+cls="good";
+}
+
+else if(hb<=18 && sex==="Male"){
+status="Normal";
+advice="Hemoglobin level within normal range.";
+cls="good";
+}
+
 else{
-hbStatus="High";
-hbAdvice="Elevated hemoglobin. May indicate dehydration or other conditions.";
-hbClass="warning";
+status="High";
+advice="Possible dehydration or elevated red cell mass.";
+cls="warning";
 }
+
+hbHTML = `
+<div class="report-section">
+<b>Hemoglobin:</b> <span class="${cls}">${hb} (${status})</span><br>${advice}
+</div>`;
 }
 
 /* ================= HBA1C ================= */
-let hba1cDisplay="INP", hba1cStatus="INP", hba1cAdvice="Info not provided", hba1cClass="warning";
+let hba1cHTML = `<div class="report-section"><b>HbA1c:</b> INP</div>`;
 
 if(hba1c){
-hba1cDisplay=hba1c;
+let status="", advice="", cls="";
 
 if(hba1c<5.7){
-hba1cStatus="Normal";
-hba1cAdvice="Normal long-term glucose control.";
-hba1cClass="good";
+status="Normal";
+advice="Normal long-term glucose control.";
+cls="good";
 }
 else if(hba1c<6.5){
-hba1cStatus="Prediabetes";
-hba1cAdvice="Elevated HbA1c. Risk of diabetes. Lifestyle modification advised.";
-hba1cClass="warning";
+status="Prediabetes";
+advice="Elevated HbA1c. Risk of diabetes. Lifestyle modification advised.";
+cls="warning";
 }
 else{
-hba1cStatus="Diabetes";
-hba1cAdvice="High HbA1c. Indicates diabetes. Requires medical management.";
-hba1cClass="danger";
+status="Diabetes";
+advice=" Indicates diabetes. Requires medical management.";
+cls="danger";
 }
+
+hba1cHTML = `
+<div class="report-section">
+<b>HbA1c:</b> <span class="${cls}">${hba1c} (${status})</span><br>${advice}
+</div>`;
 }
 
-/* ================= RESULT ================= */
-let resultHTML=`
+/* ================= FINAL OUTPUT ================= */
 
-<div class="report-section">
-<b>Patient:</b> ${name} | Age: ${age}
+let resultHTML = `
+
+<div class="report-header">
+<div class="report-title">Health Report</div>
+<div class="report-date">${formattedDate}</div>
 </div>
 
 <div class="report-section">
-<b>BMI:</b> <span class="${bmiClass}">${bmi}</span><br>${bmiAdvice}
+<b>Patient:</b> ${name} | ${age} | ${sex}
 </div>
 
-<div class="report-section">
-<b>Blood Pressure:</b> <span class="${bpClass}">${bpDisplay} (${bpStatus})</span><br>${bpAdvice}
-</div>
-
-<div class="report-section">
-<b>Pulse:</b> <span class="${pulseClass}">${pulseDisplay} (${pulseStatus})</span><br>${pulseAdvice}
-</div>
-
-<div class="report-section">
-<b>Blood Sugar:</b> <span class="${sugarClass}">${sugarDisplay} (${sugarStatus})</span><br>${sugarAdvice}
-</div>
-
-<div class="report-section">
-<b>PCV:</b> <span class="${pcvClass}">${pcvDisplay} (${pcvStatus})</span><br>${pcvAdvice}
-</div>
-
-<div class="report-section">
-<b>Hemoglobin:</b> <span class="${hbClass}">${hbDisplay} (${hbStatus})</span><br>${hbAdvice}
-</div>
-
-<div class="report-section">
-<b>HbA1c:</b> <span class="${hba1cClass}">${hba1cDisplay} (${hba1cStatus})</span><br>${hba1cAdvice}
-</div>
+${bmiHTML}
+${bpHTML}
+${pulseHTML}
+${sugarHTML}
+${pcvHTML}
+${hbHTML}
+${hba1cHTML}
 
 <div class="report-section">
 <b>Pharmacist Advice:</b><br>
-• Maintain balanced nutrition<br>
-• Monitor vitals regularly<br>
-• Seek medical consultation when abnormal values are detected<br><br>
+• Maintain healthy lifestyle<br>
+• Monitor parameters regularly<br>
+• Seek medical care when abnormal values are present<br><br>
 <i>INP = Information Not Provided</i>
 </div>
+
 `;
 
 document.getElementById("result").innerHTML=resultHTML;
@@ -233,5 +318,6 @@ document.getElementById("result").innerHTML=resultHTML;
 /* PDF */
 function downloadPDF(){
 const element=document.getElementById("result");
+
 html2pdf().from(element).save("Mendel_Health_Report.pdf");
 }
